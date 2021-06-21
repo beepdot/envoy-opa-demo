@@ -1,0 +1,59 @@
+---
+- hosts: local
+  vars:
+    api_list: []
+    org_check: "some i, j; api_roles.roles[i] == token.roles[j].role; some k, l; token.roles[j].scope[k].orgId == request.request.content.createdFor[l]"
+    role_check: "some i, j; token.roles[i].role == api_roles.roles[j]"
+    kong_apis:
+    - name: createContent
+      uris: "/content/v1/create"
+      upstream_url: "http://knowledge-mw:5000/v1/content/create"
+      strip_uri: true
+      plugins:
+      - name: jwt
+      - name: cors
+      - name: statsd
+        config.host: "statsd-service"
+        config.port: "9125"
+      - name: acl
+        config.whitelist:
+          - 'contentCreate'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "5000"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "1"
+      rbac:
+      - "{{ org_check }}"
+      - "{{ role_check }}"
+
+    - name: createCourse
+      uris: "/course/v1/create"
+      upstream_url: "http://lms-server:9000/v1/course/create"
+      strip_uri: true
+      plugins:
+      - name: jwt
+      - name: cors
+      - name: statsd
+        config.host: "statsd-service"
+        config.port: "9125"
+      - name: acl
+        config.whitelist:
+          - 'courseCreate'
+      - name: rate-limiting
+        config.policy: local
+        config.hour: "5000"
+        config.limit_by: credential
+      - name: request-size-limiting
+        config.allowed_payload_size: "1"
+      rbac:
+      - "{{ role_check }}"
+  tasks:
+  - set_fact:
+      api_list: "{{ api_list + [item | dict2items | rejectattr('key', 'equalto', 'rbac') | list | items2dict] }}"
+    with_items:
+      - "{{ kong_apis }}"
+  - debug: msg={{ api_list }}
+  - copy: dest=/tmp/kong_apis.json content="{{ kong_apis | to_nice_json}}"
+  - copy: dest=/tmp/kong_apis_new.json content="{{ api_list | to_nice_json}}"

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2021-06-20T15:58:16Z"
+  labels:
+    app: lms
+  name: lms
+  namespace: default
+  resourceVersion: "19151"
+  selfLink: /api/v1/namespaces/default/services/lms
+  uid: 640a4a21-cf5a-4773-838d-df315357731a
+spec:
+  clusterIP: 10.43.208.179
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 30068
+    port: 4001
+    protocol: TCP
+    targetPort: 4000
+  selector:
+    app: lms
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: 172.19.0.2

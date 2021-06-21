@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"creationTimestamp":"2021-06-20T15:42:24Z","labels":{"app":"nginx"},"name":"nginx","namespace":"default","resourceVersion":"7222","selfLink":"/api/v1/namespaces/default/services/nginx","uid":"7d1aa047-3bc7-4e8f-8fad-a19f1f6bc7a4"},"spec":{"clusterIP":"10.43.136.128","externalTrafficPolicy":"Cluster","ports":[{"nodePort":31139,"port":80,"protocol":"TCP","targetPort":80}],"selector":{"app":"nginx"},"sessionAffinity":"None","type":"LoadBalancer"},"status":{"loadBalancer":{}}}
+  creationTimestamp: "2021-06-20T15:47:18Z"
+  labels:
+    app: nginx
+  name: nginx
+  namespace: default
+  resourceVersion: "7587"
+  selfLink: /api/v1/namespaces/default/services/nginx
+  uid: 0f38d190-4f56-441d-a263-7379a874f1df
+spec:
+  clusterIP: 10.43.136.128
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 31139
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: 172.19.0.2
