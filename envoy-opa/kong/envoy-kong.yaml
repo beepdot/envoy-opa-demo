@@ -73,9 +73,5 @@ data:
               global_downstream_max_connections: 50000
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2021-06-20T16:43:38Z"
   name: kong-proxy-config
   namespace: default
-  resourceVersion: "19916"
-  selfLink: /api/v1/namespaces/default/configmaps/kong-proxy-config
-  uid: 0fc32409-cfd1-43ea-b92c-8d7d1c5fb72b

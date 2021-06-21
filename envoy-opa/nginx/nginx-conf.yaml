@@ -36,9 +36,5 @@ data:
     }
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2021-06-20T15:04:01Z"
   name: nginx-conf
   namespace: default
-  resourceVersion: "8816"
-  selfLink: /api/v1/namespaces/default/configmaps/nginx-conf
-  uid: a0747f63-c6dd-422d-9e1e-936ff1fc5f0a

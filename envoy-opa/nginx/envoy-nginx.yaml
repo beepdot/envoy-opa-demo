@@ -73,9 +73,5 @@ data:
               global_downstream_max_connections: 50000
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2021-06-20T16:43:51Z"
   name: nginx-proxy-config
   namespace: default
-  resourceVersion: "20576"
-  selfLink: /api/v1/namespaces/default/configmaps/nginx-proxy-config
-  uid: a4e1b823-45cc-4ebf-85c9-6790620c1d99

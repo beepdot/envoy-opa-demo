@@ -1,17 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "4"
-  creationTimestamp: "2021-06-20T15:30:51Z"
-  generation: 4
   labels:
     app: lms
   name: lms
   namespace: default
-  resourceVersion: "20924"
-  selfLink: /apis/apps/v1/namespaces/default/deployments/lms
-  uid: 3364f94a-e15d-415a-b323-2d8bd61681e1
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -26,9 +19,6 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      annotations:
-        kubectl.kubernetes.io/restartedAt: "2021-06-21T01:13:52+05:30"
-      creationTimestamp: null
       labels:
         app: lms
     spec:
@@ -110,22 +100,3 @@ spec:
         secret:
           defaultMode: 420
           secretName: policy-lms-content
-status:
-  availableReplicas: 1
-  conditions:
-  - lastTransitionTime: "2021-06-20T15:31:03Z"
-    lastUpdateTime: "2021-06-20T15:31:03Z"
-    message: Deployment has minimum availability.
-    reason: MinimumReplicasAvailable
-    status: "True"
-    type: Available
-  - lastTransitionTime: "2021-06-20T15:30:51Z"
-    lastUpdateTime: "2021-06-20T19:44:22Z"
-    message: ReplicaSet "lms-c7b448646" has successfully progressed.
-    reason: NewReplicaSetAvailable
-    status: "True"
-    type: Progressing
-  observedGeneration: 4
-  readyReplicas: 1
-  replicas: 1
-  updatedReplicas: 1

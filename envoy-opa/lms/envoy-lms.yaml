@@ -73,9 +73,5 @@ data:
               global_downstream_max_connections: 50000
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2021-06-20T16:43:24Z"
   name: lms-proxy-config
   namespace: default
-  resourceVersion: "20565"
-  selfLink: /api/v1/namespaces/default/configmaps/lms-proxy-config
-  uid: 1806ab7f-9583-48ec-8c5d-9406f8cc6259

@@ -1,16 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2021-06-20T15:35:23Z"
   labels:
     app: postgres
   name: postgres
   namespace: default
-  resourceVersion: "7807"
-  selfLink: /api/v1/namespaces/default/services/postgres
-  uid: 8b2457c7-de8f-4e66-bb89-3b7ee8786740
 spec:
-  clusterIP: 10.43.26.199
   externalTrafficPolicy: Cluster
   ports:
   - nodePort: 30904
@@ -21,7 +16,3 @@ spec:
     app: postgres
   sessionAffinity: None
   type: LoadBalancer
-status:
-  loadBalancer:
-    ingress:
-    - ip: 172.19.0.2

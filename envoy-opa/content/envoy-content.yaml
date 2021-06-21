@@ -73,9 +73,5 @@ data:
               global_downstream_max_connections: 50000
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2021-06-20T16:43:06Z"
   name: content-proxy-config
   namespace: default
-  resourceVersion: "20552"
-  selfLink: /api/v1/namespaces/default/configmaps/content-proxy-config
-  uid: ed5b40ff-7551-4eda-b6e9-6a4fdefd3caf
