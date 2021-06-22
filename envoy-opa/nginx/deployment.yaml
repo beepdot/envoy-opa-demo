@@ -79,6 +79,8 @@ spec:
         - "1111"
         - -w
         - "8282"
+        - -o
+        - "9999"
         image: openpolicyagent/proxy_init:v5
         imagePullPolicy: IfNotPresent
         name: proxy-init
