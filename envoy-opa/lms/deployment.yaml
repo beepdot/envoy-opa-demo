@@ -55,7 +55,7 @@ spec:
         - --set=plugins.envoy_ext_authz_grpc.path=envoy/authz/allow
         - --set=decision_logs.console=true
         - --ignore=.*
-        - /policy/policy-lms-content.rego
+        - /policy/policy.rego
         image: openpolicyagent/opa:latest-envoy
         imagePullPolicy: IfNotPresent
         name: opa
@@ -99,4 +99,4 @@ spec:
       - name: opa-policy
         secret:
           defaultMode: 420
-          secretName: policy-lms-content
+          secretName: opa-policy
