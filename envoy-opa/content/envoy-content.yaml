@@ -17,6 +17,18 @@ data:
               route_config:
                 name: local_route
                 virtual_hosts:
+                - name: local
+                  domains:
+                  - "localhost"
+                  routes:
+                  - match:
+                      prefix: "/"
+                    route:
+                      cluster: service
+                    typed_per_filter_config:
+                      envoy.ext_authz:
+                        "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthzPerRoute
+                        disabled: true
                 - name: backend
                   domains:
                   - "*"
