@@ -8,9 +8,9 @@ static_resources:
         port_value: 10000
     filter_chains:
     - filters:
-      - name: envoy.filters.network.http_connection_manager
+      - name: envoy.filters.network.direct_response
         typed_config:
-          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          "@type": type.googleapis.com/envoy.extensions.filters.network.direct_response.v2
           stat_prefix: ingress_http
           access_log:
           - name: envoy.access_loggers.stdout
