@@ -4,6 +4,17 @@ import input.attributes.request.http as http_request
 
 federationId := "50f967d4-b9db-4528-950c-b9f0332e63ba"
 
+publicRoleCheck {
+  api_roles := {"roles": ["PUBLIC"]}
+  token.payload.roles[_].role == api_roles.roles[_]
+}
+
+ownerCheck {
+  sub := split(token.payload.sub, ":")
+  federationId == sub[1]
+  input.parsed_body.request.userId == sub[2]
+}
+
 token := {"payload": payload} {
     [_, encoded] := split(http_request.headers.authorization, " ")
     [_, payload, _] := io.jwt.decode(encoded)
@@ -11,8 +22,11 @@ token := {"payload": payload} {
 
 updateContentState {
   api_roles := {"roles": ["PUBLIC"]}
-  sub := split(token.payload.sub, ":")
-  federationId == sub[1]
-  input.parsed_body.request.userId == sub[2]
+  ownerCheck
   some i, j, k, l, m; token.payload.roles[i].role == api_roles.roles[j]; token.payload.roles[i].scope[k].courseIds[l]; l == input.parsed_body.request.contents[m].courseId; token.payload.roles[i].scope[k].courseIds[l].batchId == input.parsed_body.request.contents[m].batchId
+}
+
+readContentState {
+  publicRoleCheck
+  ownerCheck
 }

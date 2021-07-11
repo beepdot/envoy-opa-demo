@@ -6,9 +6,10 @@ default allow = false
 
 urls[keys] { urls_to_action_mapping[keys]}   
 
-urls_to_action_mapping := {
-   "/v1/content/state/read": "readContentState",
-   "/v1/content/state/update": "updateContentState"
+urls_to_action_mapping := {   
+   "/v3/user/read": "getUserProfileV3",
+   "/v1/user/search": "searchUser",
+   "/v1/user/exists": "userExistenceApi"
 }
 
 identified_url := regex.find_n(urls[_], http_request.path, 1)[0]
