@@ -7,7 +7,7 @@ default allow = false
 urls[keys] { urls_to_action_mapping[keys]}   
 
 urls_to_action_mapping := {   
-   "/v1/content/search": {"action": "searchContent", "policy": "kmw"},
+   "/v1/content/search": {"action": "contentSearch", "policy": "kmw"},
    "/v3/user/read": {"action": "getUserProfileV3", "policy": "learner"},
    "/v1/user/search": {"action": "searchUser", "policy": "learner"},
    "/v1/user/exists": {"action": "userExistenceApi", "policy": "learner"},

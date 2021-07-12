@@ -7,7 +7,7 @@ token := {"payload": payload} {
     [_, payload, _] := io.jwt.decode(encoded)
 }
 
-searchContent {
+contentSearch {
   api_roles := {"roles": ["PUBLIC"]}
   token.payload.roles[_].role == api_roles.roles[_]
 }
