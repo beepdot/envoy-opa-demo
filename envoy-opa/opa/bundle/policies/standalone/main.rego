@@ -21,6 +21,5 @@ identified_action := urls_to_action_mapping[identified_url].action
 identified_policy_folder := urls_to_action_mapping[identified_url].policy
 
 allow {
-   data.policies.kmw.policy[identified_action]
    data.policies[identified_policy_folder].policy[identified_action]
 }
