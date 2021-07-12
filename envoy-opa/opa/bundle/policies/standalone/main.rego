@@ -16,7 +16,7 @@ urls_to_action_mapping := {
    "/v3/search": {"action": "searchContent", "policy": "search"}
 }
 
-identified_url := regex.find_n(urls[_], input.path, 1)[0]
+identified_url := regex.find_n(urls[_], http_request.path, 1)[0]
 identified_action := urls_to_action_mapping[identified_url].action
 identified_policy_folder := urls_to_action_mapping[identified_url].policy
 
