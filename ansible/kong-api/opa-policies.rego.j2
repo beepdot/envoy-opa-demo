@@ -1,0 +1,46 @@
+{% for item in opa_policies %}
+{% for key, value in item.orgCheck.items() %}
+{% if key == "body" %}
+{{item.name}} {
+{% if item.roleCheck %}
+  api_roles := {"roles": ["{{item.roleCheck | join('", "')}}"]}
+{% endif %}
+{% if item.orgCheck %}
+  some i
+  api_roles.roles[_] == token.payload.roles[i].role
+  some j, k; token.payload.roles[i].scope[j].orgId == input.parsed_body.{{value | replace("*", "k")}}
+{% endif %}
+{% if item.ownerCheck %}
+{% for key, value in item.ownerCheck.items() %}
+{% for k in value.split('/') %}
+{% if k == '{id}' %}
+  split(http_request.path, "/")[{{ loop.index - 1 }}] == sub[2]
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+}
+{% endif %}
+{% if key == "header" %}
+{{item.name}} {
+{% if item.roleCheck %}
+  api_roles := {"roles": ["{{item.roleCheck | join('", "')}}"]}
+{% endif %}
+{% if item.orgCheck %}
+  some i
+  api_roles.roles[_] == token.payload.roles[i].role
+  some j; token.payload.roles[i].scope[j].orgId == http_request.headers.{{value}}
+{% endif %}
+{% if item.ownerCheck %}
+{% for key, value in item.ownerCheck.items() %}
+{% for k in value.split('/') %}
+{% if k == '{id}' %}
+  split(http_request.path, "/")[{{ loop.index - 1 }}] == sub[2]
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+}
+{% endif %}
+{% endfor %}
+{% endfor %}

@@ -2,63 +2,75 @@
 - hosts: local
   vars:
     api_list: []
-
-    org_check: "some i, j; api_roles.roles[i] == token.roles[j].role; some k, l; token.roles[j].scope[k].orgId == request.request.content.createdFor[l]"
-
-    role_check: "some i, j; token.roles[i].role == api_roles.roles[j]"
+    opa_policies: []
 
     kong_apis:
     - name: createContent
       uris: "/content/v1/create"
       upstream_url: "http://knowledge-mw:5000/v1/content/create"
-      strip_uri: true
-      plugins:
-      - name: jwt
-      - name: cors
-      - name: statsd
-        config.host: "statsd-service"
-        config.port: "9125"
-      - name: acl
-        config.whitelist:
-          - 'contentCreate'
-      - name: rate-limiting
-        config.policy: local
-        config.hour: "5000"
-        config.limit_by: credential
-      - name: request-size-limiting
-        config.allowed_payload_size: "1"
-      rbac:
-      - "{{ org_check }}"
-      - "{{ role_check }}"
-      - roles: ["CONTENT_CREATOR", "ORG_ADMIN"]
+      checks: [
+      {
+          "type": "roleCheck",
+          "tokenKey": "CONTENT_CREATOR"
+      },
+      {
+          "type": "orgCheck",
+          "bodyKey": "request.content.createdFor[*]"
+      },
+      {
+          "type": "ownerCheck",
+          "headerKey": "request.userId"
+      }]
 
     - name: createCourse
-      uris: "/course/v1/create"
-      upstream_url: "http://lms-server:9000/v1/course/create"
-      strip_uri: true
-      plugins:
-      - name: jwt
-      - name: cors
-      - name: statsd
-        config.host: "statsd-service"
-        config.port: "9125"
-      - name: acl
-        config.whitelist:
-          - 'courseCreate'
-      - name: rate-limiting
-        config.policy: local
-        config.hour: "5000"
-        config.limit_by: credential
-      - name: request-size-limiting
-        config.allowed_payload_size: "1"
-      rbac:
-      - "{{ role_check }}"
-      - roles: ["COURSE_CREATOR", "ORG_ADMIN"]
+      uris: "/content/v1/create"
+      upstream_url: "http://knowledge-mw:5000/v1/course/create"
+      checks: [
+      {
+          "type": "roleCheck",
+          "tokenKey": "COURSE_CREATOR"
+      },
+      {
+          "type": "orgCheck",
+          "bodyKey": "request.content.createdFor[*]"
+      },
+      {
+          "type": "ownerCheck",
+          "headerKey": "request.userId"
+      }]
+
+    - name: createBook
+      uris: "/content/v1/create"
+      upstream_url: "http://knowledge-mw:5000/v1/user/create"
+      checks: [
+      {
+          "type": "roleCheck",
+          "tokenKey": "BOOK_CREATOR"
+      },
+      {
+          "type": "orgCheck",
+          "bodyKey": "request.content.createdFor[*]"
+      },
+      {
+          "type": "ownerCheck",
+          "headerKey": "request.userId"
+      }]
+
   tasks:
   - set_fact:
-      api_list: "{{ api_list + [item | dict2items | rejectattr('key', 'equalto', 'rbac') | list | items2dict] }}"
+      api_list: "{{ api_list + [item | dict2items | rejectattr('key', 'equalto', 'roleCheck') | rejectattr('key', 'equalto', 'orgCheck') | rejectattr('key', 'equalto', 'ownerCheck') | list | items2dict] }}"
+      opa_policies: "{{ opa_policies + [item | dict2items | rejectattr('key', 'equalto', 'uris') | rejectattr('key', 'equalto', 'strip_uri') | rejectattr('key', 'equalto', 'plugins') | list | items2dict] }}"
     with_items:
       - "{{ kong_apis }}"
-  - debug: msg={{ api_list }}
-  - copy: dest=/tmp/kong_apis.json content="{{ kong_apis | to_nice_json}}"
-  - copy: dest=/tmp/kong_apis_new.json content="{{ api_list | to_nice_json}}"
+#  - debug: msg={{ api_list }}
+#  - debug: msg="{{ opa_policies[0].name }}"
+#  - copy: dest=/tmp/opa_policies.json content="{{ opa_policies | to_nice_json}}"
+#  - copy: dest=/tmp/kong_apis.json content="{{ api_list | to_nice_json}}"
+#  - debug: "{{ item }}"
+#    with_items:
+#    - "{{ test_dict }}"
+  - template:
+      src: opa-policies.rego.j2
+      dest: opa-policies.rego
+
+  - shell: cat opa-policies.rego
