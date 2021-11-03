@@ -22,6 +22,14 @@ data:
                   - "localhost"
                   routes:
                   - match:
+                      prefix: "/service/health"
+                    route:
+                      cluster: service
+                    typed_per_filter_config:
+                      envoy.ext_authz:
+                        "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthzPerRoute
+                        disabled: true
+                  - match:
                       prefix: "/"
                     route:
                       cluster: service
